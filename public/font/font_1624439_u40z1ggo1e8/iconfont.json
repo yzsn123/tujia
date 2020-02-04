@@ -13,6 +13,27 @@
       "unicode_decimal": 58916
     },
     {
+      "icon_id": "554430",
+      "name": "雷达",
+      "font_class": "iconset0397",
+      "unicode": "e714",
+      "unicode_decimal": 59156
+    },
+    {
+      "icon_id": "789210",
+      "name": "借贷－信用卡",
+      "font_class": "xinyongqia",
+      "unicode": "e683",
+      "unicode_decimal": 59011
+    },
+    {
+      "icon_id": "1290026",
+      "name": "安全保障",
+      "font_class": "anquanbaozhang",
+      "unicode": "e6cb",
+      "unicode_decimal": 59083
+    },
+    {
       "icon_id": "5651349",
       "name": "爱心",
       "font_class": "aixin",
@@ -39,6 +60,13 @@
       "font_class": "faxian",
       "unicode": "e6c6",
       "unicode_decimal": 59078
+    },
+    {
+      "icon_id": "11519413",
+      "name": "首页",
+      "font_class": "shouye1",
+      "unicode": "e731",
+      "unicode_decimal": 59185
     }
   ]
 }
