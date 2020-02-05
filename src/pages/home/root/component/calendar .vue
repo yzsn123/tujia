@@ -8,7 +8,7 @@
         <span>入住日期</span>
         <p>{{ start }}</p>
       </div>
-      <em><i>共0晚</i></em>
+      <em><i :class='count ? "active" : ""'>共{{count}}晚</i></em>
       <div class="end">
         <span>离店日期</span>
         <p>{{ end }}</p>
@@ -22,6 +22,7 @@
         :poppable="false"
         :show-confirm="true"
         :formatter="formatter"
+        :default-date="date"
         @select="selectAction"
         @confirm="onConfirm"
         confirm-disabled-text="请选择离店时间"
@@ -39,19 +40,43 @@ export default {
   data() {
     return {
       start: null,
-      end: null
+      end: null,
+      date:null,
+      count:1
     };
   },
   methods: {
     // 取消
     cancelAction() {
+         this.$store.commit('home/setDate',null);
       this.$router.back();
+    },
+    // 对获取的日期进行处理
+    datematter(dat){
+        const date = new Date(dat);
+        let m = date.getMonth() + 1;
+        let d = date.getDate();
+        m = m >= 10 ? m :  `0${m}`;
+        d = d >= 10 ? d :  `0${d}`;
+        return `${m}月${d}日`;
     },
     // 确认按钮
     onConfirm(date) {
-      console.log(date);
+        if(this.start && this.end){
+            // 存入vuex
+            this.$store.commit('home/setDate',{
+                date,
+                start:this.start,
+                end:this.end,
+                count:this.count
+            });
+            this.$router.back();
+        }else{
+            alert('请选择离店时间');
+            return ;
+        }
     },
-    // 日期格式化
+    // vant日期格式化
     formatter(day) {
       const month = day.date.getMonth() + 1;
       const date = day.date.getDate();
@@ -72,21 +97,47 @@ export default {
     // 日期选中
     selectAction(date) {
       const time1 = new Date(date[0]);
-      this.start = `${time1.getMonth() + 1}月${time1.getDate()}日`;
+      this.start = this.datematter(time1);
       if (date[1]) {
         const time2 = new Date(date[1]);
-        this.end = `${time2.getMonth() + 1}月${time2.getDate()}日`;
+        this.end = this.datematter(time2);
+        const s = this.start.substr(3,2);
+        const e = this.end.substr(3,2);
+        this.count = e - s;
       } else {
-        this.end = " ";
+        this.end = null;
+        this.count = 0;
       }
-    }
+    },
+     // 初始化date
+    initDate(){
+        const time = new Date();
+        const y = time.getFullYear();
+        const m = time.getMonth();
+        const d = time.getDate();
+        const d1 = new Date(y,m,d);
+        const d2 = new Date(y,m,d+1);
+        this.start = this.datematter(d1);
+        this.end = this.datematter(d2);
+        this.$store.commit('home/setDate',{
+            date:[d1,d2],
+            start:this.start,
+            end:this.end,
+            count:1
+        });
+    },
   },
   created() {
-    const time = new Date();
-    const m = time.getMonth() + 1;
-    const d = time.getDate();
-    this.start = `${m}月${d}日`;
-    this.end = `${m}月${d + 1}日`;
+    //如果vuex里面有date数据
+    if(this.$store.state.home.date){
+        const date = this.$store.state.home.date;
+        this.date = date.date;
+        this.start = date.start;
+        this.end = date.end;
+    }else{
+        //没有则
+        this.initDate();
+    }
   }
 };
 </script>
@@ -112,9 +163,12 @@ export default {
       padding: 0 20px;
       box-sizing: border-box;
       color: #999;
+      text-align: center;
       p {
         text-align: center;
         color: #333;
+        height: 20px;
+        width: 90px;
         font-size: 15px;
         margin: 5px 0;
       }
@@ -126,9 +180,12 @@ export default {
       em {
         flex: 1;
         text-align: center;
+        .active{
+            color: #fb9727;
+        }
         i {
           font-size: 12px;
-          padding: 12px 36px;
+          padding: 12px 25px;
           border-bottom: 1px solid #999;
         }
       }

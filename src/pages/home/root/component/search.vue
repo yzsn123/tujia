@@ -13,15 +13,15 @@
       <span>当前位置<em class="iconfont icon-iconset0397"></em></span>
     </div>
     <div class="date border-bottom">
-      <div class="time" @click="calenderAction">
+      <div class="time" @click="calenderAction" :class='start.count ? "" : "isTime"'>
             <span>
                 <em>入住</em>
-                <i>2月2日</i>
+                <i>{{start.start}}</i>
             </span>
-            <span>2晚</span>
+            <span class="night" v-if="start.count">{{start.count}}晚</span>
             <span>
                 <em>离店</em>
-                <i>2月5日</i>
+                <i>{{start.end}}</i>
             </span>
         </div>
         <span class="count">
@@ -57,8 +57,18 @@ export default {
   data() {
     return {
       //选择的地区 1国内·港澳台   2海外
-      sel: 1
+      sel: 1,
+      date:{},
     };
+  },
+  computed:{
+    start(){
+      if(this.$store.state.home.date){
+        return this.$store.state.home.date;
+      }else{
+        return {count:0,start:'请选择入住时间',end:'请选择离店时间'};
+      }
+    }
   },
   methods: {
     countryAction(id) {
@@ -66,8 +76,18 @@ export default {
     },
     calenderAction(){
         this.$router.push('/home/calender');
+    },
+
+  },
+  created() {
+    //如果vuex里面有date数据
+    if(this.$store.state.home.date){
+        const date = this.$store.state.home.date;
+        this.start = date.start;
+        this.end = date.end;
+        this.count = date.count;
     }
-  }
+  },
 };
 </script>
 
@@ -131,9 +151,22 @@ export default {
     .time {
       flex: 1;
       display: flex;
+      .night{
+        text-align: center;
+        font-size: 36px;
+        letter-spacing: 5px;
+        color: #666;
+      }
       span {
         flex: 1;
       }
+    }
+    .isTime{
+      i{
+        color: #aaa;
+        font-size: 24px;
+      }
+      
     }
     .count {
       width: 116px;

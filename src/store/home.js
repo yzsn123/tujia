@@ -3,14 +3,17 @@ import API from '../utils/api'
 const state = {
     // 首页种草数据
     grass:null,
-
+    date:null,
 }
 
 const mutations = {
     // 设置种草数据
-    setGrass(value){
+    setGrass(state,value){
         state.grass = value;
-    }
+    },
+    setDate(state,value){
+        state.date = value;
+    },
 }
 
 const actions = {
@@ -21,10 +24,13 @@ const actions = {
         return data;
     }
 }
-
+const getters = {
+    
+}
 export default{
     namespaced:true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }
