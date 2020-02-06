@@ -101,9 +101,8 @@ export default {
       if (date[1]) {
         const time2 = new Date(date[1]);
         this.end = this.datematter(time2);
-        const s = this.start.substr(3,2);
-        const e = this.end.substr(3,2);
-        this.count = e - s;
+       
+        this.count = (time2 - time1) / 1000 / 3600 / 24;
       } else {
         this.end = null;
         this.count = 0;

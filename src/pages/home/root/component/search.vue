@@ -9,8 +9,8 @@
       >
     </div>
     <div class="city border-bottom">
-      <span>赣州</span>
-      <span>当前位置<em class="iconfont icon-iconset0397"></em></span>
+      <span>{{city}}</span>
+      <span @click="getLocation">当前位置<em class="iconfont icon-iconset0397"></em></span>
     </div>
     <div class="date border-bottom">
       <div class="time" @click="calenderAction" :class='start.count ? "" : "isTime"'>
@@ -24,16 +24,16 @@
                 <i>{{start.end}}</i>
             </span>
         </div>
-        <span class="count">
+        <span class="count" @click="popShow">
             <em>人数</em>
-            <i>不限</i>
+            <i>{{personCount}}</i>
         </span>
     </div>
 
     <div class="keyName">
       关键字/位置/民宿名
     </div>
-    <button>开始搜索</button>
+    <button @click="searchAction">开始搜索</button>
     <div class="add">
       <span>
         <em class="iconfont icon-xinyongqia"></em>
@@ -48,50 +48,112 @@
         <i>房源房东真实认证</i>
       </span>
     </div>
+    <van-popup 
+    v-model="show" 
+    get-container="#app" 
+    position="bottom">
+      <div class="person">
+        <div class="popTitle border-bottom">
+          <span @click="cancelAction">取消</span>
+          <h2>选择人数</h2>
+        </div>
+        <ul>
+          <li 
+          :class='personCount===item ? "personActive" :"" ' 
+          v-for="(item,index) in liList" 
+          :key="index"
+          @click="personAction(item)">{{item}}</li>
+        </ul>
+      </div>
+    </van-popup>
+    <div class="map-container" ref="map-container"></div>
   </div>
 </template>
 
 <script>
+import { Popup } from 'vant';
+import { location } from "./../../../../utils/location.js";
 export default {
-
+  components:{
+    [Popup.name]:Popup
+  },
   data() {
     return {
       //选择的地区 1国内·港澳台   2海外
       sel: 1,
       date:{},
+      city:'赣州市',
+      show: false,
+      personCount:'不限',
+      liList:['1人','2人','3人','4人','5人','6人','7人','8人','9人','10人+','不限']
     };
   },
   computed:{
+    // 获取vuex的date数据
     start(){
       if(this.$store.state.home.date){
+        this.date = this.$store.state.home.date;
         return this.$store.state.home.date;
       }else{
+         this.date = {};
         return {count:0,start:'请选择入住时间',end:'请选择离店时间'};
       }
     }
   },
   methods: {
+    // 国内，海外选择
     countryAction(id) {
       this.sel = id;
     },
+    // 点击时间选择
     calenderAction(){
         this.$router.push('/home/calender');
     },
-
+    // 显示弹出层
+    popShow(){
+      this.show = true;
+    },
+    // 隐藏弹出层
+    cancelAction(){
+      this.show = false;
+    },
+    // 选择人数
+    personAction(item){
+      this.personCount = item;
+      this.$store.commit('home/setPersonCount',item);
+      this.show = false;
+    },
+    // 点击搜索
+    searchAction(){
+      if(this.date.date){
+        this.$router.push('/home/search');
+      }else{
+        this.$toast('请选择入住时间及离店时间');
+      }
+    },
+    // 获取当前位置
+    getLocation() {
+      let _this = this;
+      AMap.plugin("AMap.CitySearch", function() {
+      var citySearch = new AMap.CitySearch();
+      citySearch.getLocalCity(function(status, result) {
+        if (status === "complete" && result.info === "OK") {
+          // 查询成功，result即为当前所在城市信息
+          _this.$toast.loading({message:'定位中',duration:500,position:'middle',className:"locationToast"});
+          _this.city = result.city;
+        }else{
+          _this.$toast.fail({message:'定位失败',duration:500,position:'middle',className:"locationToast"});
+        }
+        });
+      });
+    },
   },
-  created() {
-    //如果vuex里面有date数据
-    if(this.$store.state.home.date){
-        const date = this.$store.state.home.date;
-        this.start = date.start;
-        this.end = date.end;
-        this.count = date.count;
-    }
-  },
+  created() {},
 };
 </script>
 
 <style lang="scss" scoped>
+
 .search {
   background: white;
   width: 970px;
@@ -100,6 +162,11 @@ export default {
   border-radius: 25px;
   box-shadow: 0 0 10px #aaaaaa;
   overflow: hidden;
+  .map-container{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
   .select {
     width: 100%;
     span {
@@ -226,4 +293,50 @@ export default {
     }
   }
 }
+.person{
+    width: 100%;
+    height: 676px;
+    background: white;
+    .popTitle{
+      width: 100%;
+      height: 138px;
+      position: relative;
+      line-height: 138px;
+      span{
+        color: #676767;
+        font-size: 36px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 0 58px;
+      }
+      h2{
+        font-size: 46px;
+        color: #333;
+        text-align: center;
+      }
+    }
+    ul{
+      box-sizing: border-box;
+      padding: 60px 45px;
+      display: flex;
+      flex-wrap: wrap;
+      li{
+        background: #f8f8f8;
+        color: #222;
+        font-size: 33px;
+        width: 220px;
+        height: 78px;
+        line-height: 78px;
+        text-align: center;
+        margin: 20px 13px;
+        border-radius: 39px;
+      }
+      .personActive{
+        background: #fff8f2;
+        color: #ec9b5a;
+        border: 1px solid #ec9b5a;
+      }
+    }
+  }
 </style>

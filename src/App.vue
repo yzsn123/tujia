@@ -43,4 +43,16 @@ body {
     width: 100%;
   }
 }
+.Toast{
+  background:rgba(255,255,255);
+  box-shadow: 0 0 25px #fb9727;
+  font-size: 52px;
+  margin-top: 100px;
+  padding: 100px;
+  border-radius: 25px;
+  color: #fb9727
+}
+.locationToast{
+  transform: scale(1.5)
+}
 </style>

@@ -2,7 +2,7 @@ import { Icon,Lazyload,Toast  } from 'vant'
 
 import myScroll from './../components/my-scroll.vue'
 
-Toast.setDefaultOptions({ duration: 2000 ,className:'Toast'});
+Toast.setDefaultOptions({ duration: 2000 ,className:'Toast',position:'top'});
 
 export default {
   install(Vue){
