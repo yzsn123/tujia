@@ -73,6 +73,7 @@
 <script>
 import { Popup } from 'vant';
 import { location } from "./../../../../utils/location.js";
+import {mapActions} from 'vuex'
 export default {
   components:{
     [Popup.name]:Popup
@@ -81,8 +82,8 @@ export default {
     return {
       //选择的地区 1国内·港澳台   2海外
       sel: 1,
-      date:{},
-      city:'赣州市',
+      // date:{},
+      city:'深圳',
       show: false,
       personCount:'不限',
       liList:['1人','2人','3人','4人','5人','6人','7人','8人','9人','10人+','不限']
@@ -92,15 +93,16 @@ export default {
     // 获取vuex的date数据
     start(){
       if(this.$store.state.home.date){
-        this.date = this.$store.state.home.date;
+        // this.date = this.$store.state.home.date;
         return this.$store.state.home.date;
       }else{
-         this.date = {};
+        //  this.date = {};
         return {count:0,start:'请选择入住时间',end:'请选择离店时间'};
       }
     }
   },
   methods: {
+     ...mapActions("home", {datematter:'datematter'}),
     // 国内，海外选择
     countryAction(id) {
       this.sel = id;
@@ -125,8 +127,8 @@ export default {
     },
     // 点击搜索
     searchAction(){
-      if(this.date.date){
-        this.$router.push('/home/search');
+      if(this.$store.state.home.date){
+        this.$router.push(`/home/searchList/${this.city}`);
       }else{
         this.$toast('请选择入住时间及离店时间');
       }
@@ -147,8 +149,27 @@ export default {
         });
       });
     },
+    // 初始化日期
+    async initDate() {
+      const time = new Date();
+      const y = time.getFullYear();
+      const m = time.getMonth();
+      const d = time.getDate();
+      const d1 = new Date(y, m, d);
+      const d2 = new Date(y, m, d + 1);
+      const start = await this.datematter(d1);
+      const end = await this.datematter(d2);
+      this.$store.commit("home/setDate", {
+        date: [d1, d2],
+        start,
+        end,
+        count: 1
+      });
+    }
   },
-  created() {},
+  created() {
+    this.initDate();
+  },
 };
 </script>
 

@@ -21,7 +21,7 @@
         <div class="discount-wrap">
           <h2>超值特惠</h2>
           <p>限时折扣，手快有，手慢无</p>
-          <div class="discount">
+          <div class="discount" @click="searchAction">
             <div class="left">
               <img src="./../../../assets/home_07.jpg" alt />
             </div>
@@ -37,19 +37,24 @@
           </div>
         </div>
         <!-- 首页大图 -->
-        <router-link class="plan" to="/home/pro"><img  src="../../../assets/home_17.jpg"  /></router-link>
+        <router-link class="plan" to="/home/pro"
+          ><img src="../../../assets/home_17.jpg"
+        /></router-link>
         <div class="safe">
           <img src="../../../assets/home_18.jpg" alt="" />
         </div>
 
         <!-- 美宿种草机 -->
-        <Grass :grass="grass" />
+        <Grass :grassList="grassList" />
         <!-- 没有更多了 -->
         <p v-if="noMore" class="foot">没有更多了</p>
       </myScroll>
     </div>
-    
-    <router-view></router-view>
+    <transition class enter-active-class="slideInRight" leave-active-class="slideOutRight">
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
+    </transition>
   </div>
 </template>
 
@@ -65,8 +70,8 @@ export default {
   data() {
     return {
       canload: true,
-      grass: null,
-      noMore:false,
+      noMore: false,
+      grassList: []
     };
   },
   methods: {
@@ -76,27 +81,30 @@ export default {
       this.getGrass();
     },
     // 获取种草数据
-    ...mapActions("home", { requestGrass: "requestGrass" }),
+    ...mapActions("home", { requestGrass: "requestGrass"}),
     async getGrass() {
       // 如果没有更多了就
-      if(this.noMore) return ;
+      if (this.noMore) return;
 
       let { data } = await this.requestGrass();
       // 如果是第一次请求
-      if(!this.grass){
-        this.grass = data;
-      }else{
+      if (this.grassList.length === 0) {
+        this.grassList = data.list;
+      } else {
         // 不是第一次请求
-        this.grass.list = this.grass.list.concat(data.list);
-        if(this.grass.list.length >= data.count){
+        this.grassList = this.grassList.concat(data.list);
+        if (this.grassList.length >= data.count) {
           this.noMore = true;
         }
       }
       // 渲染完dom进行的操作，防抖
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.$refs.myScroll.fresh();
         this.canload = true;
-      })
+      });
+    },
+    searchAction(){
+      this.$router.push(`/home/searchList/${this.city}`);
     }
   },
   created() {
@@ -196,7 +204,7 @@ export default {
   }
   .plan {
     width: 100%;
-    img{
+    img {
       padding: 105px 0;
       width: 100%;
     }
@@ -213,7 +221,7 @@ export default {
       box-shadow: 0 0 15px #aaa;
     }
   }
-  .foot{
+  .foot {
     font-size: 24px;
     letter-spacing: 5px;
     color: #666;

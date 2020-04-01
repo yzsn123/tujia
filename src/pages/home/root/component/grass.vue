@@ -2,8 +2,8 @@
   <div class="grass">
     <h2>美宿种草机</h2>
     <p>民宿达人“墙裂”推荐</p>
-    <div class="grasslist" v-if="grass">
-      <div class="item" v-for="(item, index) in grass.list" :key="index">
+    <div class="grasslist">
+      <div class="item" v-for="(item, index) in grassList" :key="index" @click="detailAction(item)">
         <img  v-lazy="item.img" />
         <div class="message">
           <p><van-icon name="location" class="icon"/>{{ item.address }}</p>
@@ -22,8 +22,25 @@
 
 export default {
   props:{
-    grass:Object
+    grassList:Array
   },
+  methods:{
+    detailAction(item){
+      console.log(item);
+      const obj = {
+        bed:item.bed,
+        discount:item.discount,
+        newPrice:item.price,
+        room:item.room,
+        personCount:item.person,
+        title:item.title,
+        grade:item.count,
+        img:item.img
+      }
+      localStorage.setItem('detail',JSON.stringify(obj));
+      this.$router.push('/home/detail');
+    }
+  }
 };
 </script>
 

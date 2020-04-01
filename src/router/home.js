@@ -10,6 +10,15 @@ export default {
     {
         path:'calender',
         component:()=> import('../pages/home/root/component/calendar .vue')
+    },
+    {
+      path:'searchList/:city',
+      props:true,
+      component:()=>import('../pages/home/searchList/searchList.vue')
+    },
+    {
+      path:'detail',
+      component:()=>import('../pages/home/detail/detail.vue')
     }
   ]
 };

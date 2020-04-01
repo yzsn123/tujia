@@ -1,4 +1,14 @@
 export default {
-    path: '/message',
-    component: () => import("./../pages/message/root/message.vue"),
-}
+  path: "/message",
+  component: () => import("./../pages/message/root/message.vue"),
+  //路由内守卫
+  beforeEnter(to, from, next) {
+    let isLogin = localStorage.getItem("isLogin");
+    if (isLogin && isLogin === "true") {
+      next();
+    } else {
+      localStorage.setItem("to", to.path);
+      next({ path: "/login" });
+    }
+  }
+};

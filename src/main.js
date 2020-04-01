@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 import 'lib-flexible/flexible'
 Vue.config.productionTip = false
-
+Vue.config.devtools = true;
 
 Vue.use(plugin);
 

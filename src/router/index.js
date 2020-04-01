@@ -11,6 +11,10 @@ const routes = [{
     path: '/',
     redirect: '/home'
   },
+  {
+    path:'/login',
+    component:()=> import('../pages/mine/login/login.vue')
+  },
   homeRouter,
   collectRouter,
   messageRouter,
