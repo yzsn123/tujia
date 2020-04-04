@@ -40,6 +40,17 @@ const HOME_SEARCHLIST_API = '/api/home/searchList'
 // 发现页面的数据
 const FOUND_API = '/api/found'
 
+//获取个人信息
+const GET_USERINFO_API = '/api/user/getUserInfo'
+
+//保存个人信息
+const SET_USERINFO_API = '/api/user/setUserInfo'
+
+//添加订单信息
+const ORDER_BUY_API = '/api/order/buy'
+
+//获取订单信息
+const ORDEY_DONE_API = '/api/order/done'
 export default {
     REGIESTER_API,
     LOGIN_API,
@@ -47,5 +58,9 @@ export default {
     LOGOUT_API,
     HOME_GRASS_API,
     HOME_SEARCHLIST_API,
-    FOUND_API
+    FOUND_API,
+    GET_USERINFO_API,
+    SET_USERINFO_API,
+    ORDER_BUY_API,
+    ORDEY_DONE_API
 }

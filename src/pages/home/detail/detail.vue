@@ -62,8 +62,14 @@
     </div>
     <div class="foot border-top">
         <span><i>￥{{detail.newPrice}}</i>/晚</span>
-        <em>立即预定</em>
+        <em @click="orderAction">立即预定</em>
     </div>
+
+    <transition class enter-active-class="slideInRight" leave-active-class="slideOutRight">
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
+    </transition>
   </div>
 </template>
 
@@ -81,13 +87,17 @@ export default {
   methods:{
       backAction(){
           this.$router.back();
+      },
+      orderAction(){
+        this.$router.push('/home/detail/order')
       }
   },
   activated() {
     if (localStorage.getItem("detail")) {
       this.detail = JSON.parse(localStorage.getItem("detail"));
     }
-  }
+  },
+  
 };
 </script>
 

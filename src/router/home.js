@@ -18,7 +18,14 @@ export default {
     },
     {
       path:'detail',
-      component:()=>import('../pages/home/detail/detail.vue')
-    }
+      component:()=>import('../pages/home/detail/detail.vue'),
+      children:[
+        {
+          path: 'order',
+          component: ()=>import('../pages/home/order')
+        }
+      ]
+    },
+    
   ]
 };

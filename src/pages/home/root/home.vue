@@ -104,7 +104,7 @@ export default {
       });
     },
     searchAction(){
-      this.$router.push(`/home/searchList/${this.city}`);
+      this.$router.push(`/home/searchList/${this.$store.state.home.city}`);
     }
   },
   created() {

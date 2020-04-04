@@ -3,43 +3,44 @@
     <img src="../../../assets/mineBg.jpg" alt="" class="bg" />
     <!-- 头部 -->
     <div class="header">
-      <span>15970709762</span>
-      <i class="iconfont icon-icon-test"
-          @click="setAction"
-      ></i>
+      <span>{{username.name}}</span>
+      <i class="iconfont icon-icon-test" @click="setAction"></i>
     </div>
     <div class="content">
       <!-- 个人信息 -->
       <div class="usermessage">
         <img src="../../../assets/headImg.jpeg" alt="" />
-        <div class="userNickname">
-          <p>个性签名</p>
-          <span>啦啦啦啦啦啦啦</span>
-        </div>
-        <div class="edit">
+        <div class="edit" @click="editAction">
           <span class="iconfont icon-bianji"></span>
         </div>
       </div>
       <!-- 查看订单 -->
-      <h2>
+      <h2 @click="orderAction">
         <span>我的订单</span>
         <em>查看全部<van-icon name="arrow"/></em>
       </h2>
       <!-- 我的内容展示 -->
       <div class="mycontent">
-        <div class="items" v-for="(item, index) in contentArray" :key="item.title">
-          <img :src='"../../../assets/mine" + index + ".jpg"' alt="">
-          <span>{{item.title}}</span>
+        <div
+          class="items"
+          v-for="(item, index) in contentArray"
+          :key="item.title"
+        >
+          <img :src="require('../../../assets/mine' + index + '.jpg')" alt="" />
+          <span>{{ item.title }}</span>
         </div>
       </div>
     </div>
 
-    <transition class enter-active-class="slideInRight" leave-active-class="slideOutRight">
+    <transition
+      class
+      enter-active-class="slideInRight"
+      leave-active-class="slideOutRight"
+    >
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
     </transition>
-
   </div>
 </template>
 
@@ -60,10 +61,31 @@ export default {
       ]
     };
   },
-  methods:{
-    setAction(){
-      this.$router.push('/mine/setting')
+  computed:{
+    username(){
+      return this.$store.state.mine.userInfo;
     }
+  },
+  methods: {
+    setAction() {
+      this.$router.push("/mine/setting");
+    },
+    editAction(){
+      this.$router.push('/mine/edit')
+    },
+    async requestUserInfo(){
+      let { data } = await this.$store.dispatch('mine/requestUserInfo');
+      if(data){
+        this.$store.commit('mine/setUserInfo',data[0]);
+      }
+    },
+    //跳转到订单页
+    orderAction(){
+      this.$router.push('mine/order');
+    }
+  },
+  created(){
+    this.requestUserInfo();
   }
 };
 </script>
@@ -86,6 +108,7 @@ export default {
     align-items: center;
     span {
       font-weight: bold;
+      font-family: "楷体";
       margin-left: 15px;
     }
     i {
@@ -163,24 +186,24 @@ export default {
       }
     }
   }
-  .mycontent{
+  .mycontent {
     margin-top: 30px;
     padding: 0 52px 152px 52px;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     background: white;
-    .items{
+    .items {
       width: 280px;
       display: flex;
       flex-direction: column;
       align-items: center;
       margin-top: 52px;
-      img{
+      img {
         width: 52px;
         margin-bottom: 29px;
       }
-      span{
+      span {
         color: #333;
         font-size: 38px;
       }

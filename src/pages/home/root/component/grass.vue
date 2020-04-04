@@ -26,7 +26,6 @@ export default {
   },
   methods:{
     detailAction(item){
-      console.log(item);
       const obj = {
         bed:item.bed,
         discount:item.discount,

@@ -4,7 +4,8 @@ const state = {
   // 首页种草数据
   grass: null,
   date: null,
-  personCount: "不限"
+  personCount: "不限",
+  city: '深圳'
 };
 
 const mutations = {
@@ -19,6 +20,9 @@ const mutations = {
   // 设置人数
   setPersonCount(state, value) {
     state.personCount = value;
+  },
+  setCity(state,city){
+    state.city = city;
   }
 };
 
@@ -45,6 +49,16 @@ const actions = {
     m = m >= 10 ? m : `0${m}`;
     d = d >= 10 ? d : `0${d}`;
     return `${m}月${d}日`;
+  },
+  //存储订单
+  async addOrder(context,val){
+    const  { data } = await Http.get(API.ORDER_BUY_API,{val});
+    return data;
+  },
+  //获取订单信息
+  async requestOrder(){
+    const { data } = await Http.get(API.ORDEY_DONE_API);
+    return data;
   }
 };
 const getters = {};

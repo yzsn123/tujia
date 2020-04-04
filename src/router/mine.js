@@ -5,6 +5,14 @@ export default {
     {
       path: "setting",
       component: () => import("../pages/mine/set/set.vue")
+    },
+    {
+      path: "edit",
+      component: () => import("../pages/mine/root/children/edit.vue")
+    },
+    {
+      path: 'order',
+      component: () => import("../pages/mine/order")
     }
   ],
   //路由内守卫

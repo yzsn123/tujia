@@ -13,6 +13,14 @@ export default {
   },
   data() {
     return {};
+  },
+  methods:{
+    async checkLogin(){
+      let res = await this.$store.dispatch('login/checkoutLogin');
+    }
+  },
+  created(){
+    this.checkLogin();
   }
 };
 </script>

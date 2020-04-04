@@ -45,7 +45,7 @@
         </li>
       </ul>
 
-      <p>退出登录</p>
+      <p @click="logoutAction">退出登录</p>
     </div>
   </div>
 </template>
@@ -55,6 +55,12 @@ export default {
     methods:{
         backAction(){
             this.$router.back();
+        },
+        async logoutAction(){
+          const res = await this.$store.dispatch('login/requestLogout');
+          if(res){
+            this.$router.push('/home')
+          }
         }
     }
 };
